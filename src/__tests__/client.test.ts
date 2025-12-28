@@ -25,9 +25,7 @@ describe('MizbanCloud SDK', () => {
   beforeEach(() => {
     vi.clearAllMocks();
     client = new MizbanCloud({
-      authBaseUrl: 'http://localhost:8003',
-      cdnBaseUrl: 'http://localhost:8000',
-      cloudBaseUrl: 'http://localhost:8001',
+      baseUrl: 'https://auth.mizbancloud.com',
     });
   });
 

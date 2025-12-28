@@ -110,9 +110,7 @@ describe('Type Exports', () => {
 
     it('should export MizbanCloudConfig type', () => {
       const config: MizbanCloudConfig = {
-        authBaseUrl: 'http://localhost:8003',
-        cdnBaseUrl: 'http://localhost:8000',
-        cloudBaseUrl: 'http://localhost:8001',
+        baseUrl: 'https://auth.mizbancloud.com',
         timeout: 30000,
         language: 'en',
       };

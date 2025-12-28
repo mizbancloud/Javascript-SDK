@@ -19,9 +19,7 @@ import { MizbanCloud } from '@mizbancloud/sdk';
 
 // Initialize the SDK
 const client = new MizbanCloud({
-  authBaseUrl: 'http://localhost:8003',  // Auth API
-  cdnBaseUrl: 'http://localhost:8000',   // CDN API
-  cloudBaseUrl: 'http://localhost:8001', // Cloud API
+  baseUrl: 'https://auth.mizbancloud.com',
   language: 'en', // 'en' or 'fa'
 });
 
@@ -723,10 +721,8 @@ try {
 
 ```typescript
 const client = new MizbanCloud({
-  // API endpoints
-  authBaseUrl: 'http://localhost:8003',
-  cdnBaseUrl: 'http://localhost:8000',
-  cloudBaseUrl: 'http://localhost:8001',
+  // API endpoint
+  baseUrl: 'https://auth.mizbancloud.com',
 
   // Request timeout (default: 30000ms)
   timeout: 60000,

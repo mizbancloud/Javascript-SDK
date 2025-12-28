@@ -1,4 +1,4 @@
-import axios, { AxiosInstance, AxiosError, AxiosRequestConfig } from 'axios';
+import axios, { type AxiosInstance, type AxiosError, type AxiosRequestConfig } from 'axios';
 import type { ApiResponse, ApiError, MizbanCloudConfig, RequestOptions } from '../types';
 
 /**
@@ -32,9 +32,7 @@ export class MizbanCloudError extends Error {
  * HTTP Client for MizbanCloud API
  */
 export class HttpClient {
-  private authClient: AxiosInstance;
-  private cdnClient: AxiosInstance;
-  private cloudClient: AxiosInstance;
+  private client: AxiosInstance;
   private token: string | null = null;
   private language: 'en' | 'fa';
 
@@ -49,33 +47,19 @@ export class HttpClient {
       ...config.headers,
     };
 
-    this.authClient = axios.create({
-      baseURL: config.authBaseUrl ?? 'http://localhost:8003',
+    this.client = axios.create({
+      baseURL: config.baseUrl ?? 'https://auth.mizbancloud.com',
       timeout,
       headers: defaultHeaders,
     });
 
-    this.cdnClient = axios.create({
-      baseURL: config.cdnBaseUrl ?? 'http://localhost:8000',
-      timeout,
-      headers: defaultHeaders,
-    });
-
-    this.cloudClient = axios.create({
-      baseURL: config.cloudBaseUrl ?? 'http://localhost:8001',
-      timeout,
-      headers: defaultHeaders,
-    });
-
-    // Add request interceptors
-    [this.authClient, this.cdnClient, this.cloudClient].forEach((client) => {
-      client.interceptors.request.use((config) => {
-        if (this.token) {
-          config.headers['Authorization'] = `Bearer ${this.token}`;
-        }
-        config.headers['Accept-Language'] = this.language;
-        return config;
-      });
+    // Add request interceptor
+    this.client.interceptors.request.use((config) => {
+      if (this.token) {
+        config.headers['Authorization'] = `Bearer ${this.token}`;
+      }
+      config.headers['Accept-Language'] = this.language;
+      return config;
     });
   }
 
@@ -170,7 +154,7 @@ export class HttpClient {
     data?: D,
     options?: RequestOptions
   ): Promise<ApiResponse<T>> {
-    return this.request(this.authClient, method, path, data as Record<string, unknown>, options);
+    return this.request(method, path, data as Record<string, unknown>, options);
   }
 
   /**
@@ -182,7 +166,7 @@ export class HttpClient {
     data?: D,
     options?: RequestOptions
   ): Promise<ApiResponse<T>> {
-    return this.request(this.cdnClient, method, path, data as Record<string, unknown>, options);
+    return this.request(method, path, data as Record<string, unknown>, options);
   }
 
   /**
@@ -194,14 +178,13 @@ export class HttpClient {
     data?: D,
     options?: RequestOptions
   ): Promise<ApiResponse<T>> {
-    return this.request(this.cloudClient, method, path, data as Record<string, unknown>, options);
+    return this.request(method, path, data as Record<string, unknown>, options);
   }
 
   /**
    * Internal request method
    */
   private async request<T>(
-    client: AxiosInstance,
     method: 'GET' | 'POST' | 'PUT' | 'DELETE',
     path: string,
     data?: Record<string, unknown>,
@@ -222,7 +205,7 @@ export class HttpClient {
         config.params = { ...config.params, ...data };
       }
 
-      const response = await client.request<ApiResponse<T>>(config);
+      const response = await this.client.request<ApiResponse<T>>(config);
 
       // Check for API-level errors (success: false with 2xx status)
       if (response.data && response.data.success === false) {

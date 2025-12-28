@@ -24,12 +24,8 @@ export interface PaginatedResponse<T> extends ApiResponse<T[]> {
  * SDK Configuration
  */
 export interface MizbanCloudConfig {
-  /** Base URL for Auth/Main API (default: http://localhost:8003) */
-  authBaseUrl?: string;
-  /** Base URL for CDN API (default: http://localhost:8000) */
-  cdnBaseUrl?: string;
-  /** Base URL for Cloud API (default: http://localhost:8001) */
-  cloudBaseUrl?: string;
+  /** Base URL for API (default: https://auth.mizbancloud.com) */
+  baseUrl?: string;
   /** Request timeout in milliseconds (default: 30000) */
   timeout?: number;
   /** Language for API responses: 'en' or 'fa' (default: 'en') */
