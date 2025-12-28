@@ -7,9 +7,13 @@
   "types": "dist/index.d.ts",
   "exports": {
     ".": {
-      "types": "./dist/index.d.ts",
+      "types": {
+        "require": "./dist/index.d.ts",
+        "import": "./dist/index.d.mts"
+      },
       "require": "./dist/index.js",
-      "import": "./dist/index.mjs"
+      "import": "./dist/index.mjs",
+      "default": "./dist/index.js"
     }
   },
   "scripts": {
